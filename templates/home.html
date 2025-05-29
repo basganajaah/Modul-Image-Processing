@@ -1,0 +1,93 @@
+{% extends "base.html" %} {% block title %}Beranda - Pengolahan Citra Digital{% endblock %} {% block
+content %}
+<div class="content-card">
+  <h2 class="section-title">Pengolahan Citra Digital</h2>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <i class="fas fa-eye-dropper"></i>
+      <h5>Lihat Nilai RGB Citra</h5>
+      <p>
+        Telusuri nilai warna (Red, Green, Blue) dari setiap piksel dalam gambar
+        untuk memahami komposisi warna secara mendalam.
+      </p>
+    </div>
+    <div class="feature-card">
+      <i class="fas fa-chart-bar"></i>
+      <h5>Histogram Citra</h5>
+      <p>
+        Analisis distribusi intensitas piksel pada citra dalam bentuk grafik
+        histogram untuk mendeteksi kontras dan pencahayaan.
+      </p>
+    </div>
+    <div class="feature-card">
+      <i class="fas fa-magic"></i>
+      <h5>Operasi Pengolahan</h5>
+      <p>
+        Lakukan operasi dasar seperti konversi grayscale, filtering, segmentasi,
+        dan deteksi tepi secara interaktif.
+      </p>
+    </div>
+    <div class="feature-card">
+      <i class="fas fa-brain"></i>
+      <h5>Transformasi Lanjutan</h5>
+      <p>
+        Gunakan transformasi Fourier, pemrosesan morfologi, dan peningkatan
+        citra untuk eksplorasi lanjutan.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="content-card">
+  <h3 class="section-title">Fitur & Statistik</h3>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <h5>Fitur Unggulan</h5>
+      <ul class="list-unstyled">
+        <li class="mb-2">
+          <i class="fas fa-check text-primary me-2"></i>Visualisasi histogram &
+          RGB
+        </li>
+        <li class="mb-2">
+          <i class="fas fa-check text-primary me-2"></i>Eksekusi filter spasial
+          & frekuensi
+        </li>
+        <li class="mb-2">
+          <i class="fas fa-check text-primary me-2"></i>Proses segmentasi
+          otomatis/manual
+        </li>
+        <li class="mb-2">
+          <i class="fas fa-check text-primary me-2"></i>Transformasi &
+          normalisasi citra
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <h5>Fitur Tambahan</h5>
+      <ul class="list-unstyled">
+        <li class="mb-2">
+          <i class="fas fa-check text-primary me-2"></i>Transformasi Fourier &
+          filtering frekuensi
+        </li>
+        <li class="mb-2">
+          <i class="fas fa-check text-primary me-2"></i>Enhancement kontras &
+          brightness
+        </li>
+        <li class="mb-2">
+          <i class="fas fa-check text-primary me-2"></i>Konversi warna antar
+          model (RGB, HSV, Lab)
+        </li>
+        <li class="mb-2">
+          <i class="fas fa-check text-primary me-2"></i>Deteksi objek & fitur
+          citra
+        </li>
+        <li class="mb-2">
+          <i class="fas fa-check text-primary me-2"></i>Ekspor hasil dalam
+          format PNG/JPEG
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

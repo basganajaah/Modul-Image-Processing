@@ -1,0 +1,22 @@
+{% extends "base.html" %} {% block title %}Array RGB{% endblock %} {% block content
+%}
+<h2 class="mb-4">Unggah Citra Digital untuk Mendapatkan Array RGB</h2>
+<div class="card mb-5">
+  <div class="card-body">
+    <form action="/rgb/" method="post" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="uploadFile" class="form-label">Pilih Gambar:</label>
+        <input
+          type="file"
+          name="file"
+          class="form-control"
+          id="uploadFile"
+          accept="image/*"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

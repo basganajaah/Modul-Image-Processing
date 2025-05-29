@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}JTK PCD 2024 -
+      BANDYAGA ADIANSYAH SUGANDI - 231511037{% endblock %}
+    </title>
+    <link rel="icon" type="image/png" href="/static/image/logo.png" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i><img src="/static/image/logo.png" alt="Icon" /></i>
+        </div>
+        <h4>Main Menu</h4>
+      </div>
+
+      <!-- Search Box -->
+      <div class="sidebar-search">
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Cari..."
+            id="searchInput"
+          />
+          <button class="search-clear" id="searchClear" style="display: none">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <ul class="sidebar-nav list-unstyled" id="sidebarNav">
+        <!-- Main Menu -->
+        <li class="nav-item">
+          <a href="/" class="nav-link active">
+            <i class="fas fa-home"></i>
+            Home
+          </a>
+        </li>
+
+        <!-- Modul 1: RGB -->
+        <li class="nav-section">
+          <div class="nav-section-title">
+            <i class="fas fa-paint-roller"></i>
+            Modul 1
+          </div>
+          <ul class="nav-subsection">
+            <li class="nav-item">
+              <a href="/rgb" class="nav-link">
+                <i class="fas fa-layer-group"></i>
+                Array RGB
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Modul 2: Operasi Dasar Aritmatika -->
+        <li class="nav-section">
+          <div class="nav-section-title">
+            <i class="fas fa-users"></i>
+            Modul 2
+          </div>
+          <ul class="nav-subsection">
+            <li class="nav-item">
+              <a href="/operation/" class="nav-link">
+                <i class="fas fa-user"></i>
+                Operasi Aritmatika dan Logika Citra
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/statistics/" class="nav-link">
+                <i class="fas fa-user-tag"></i>
+                Statistik Citra
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/grayscale/" class="nav-link">
+                <i class="fas fa-user-tag"></i>
+                Konversi Grayscale
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/histogram/" class="nav-link">
+                <i class="fas fa-user-tag"></i>
+                Lihat Histogram Citra
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/equalize/" class="nav-link">
+                <i class="fas fa-user-tag"></i>
+                Histogram Equalization
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/specify/" class="nav-link">
+                <i class="fas fa-user-tag"></i>
+                Histogram Specification
+              </a>
+            </li>
+          </ul>
+        </li>
+
+      <!-- No Results Message -->
+      <div class="no-results" id="noResults" style="display: none">
+        <i class="fas fa-search"></i>
+        <p>Menu yang dicari tidak ada</p>
+      </div>
+    </nav>
+
+    <!-- Backdrop -->
+    <div class="sidebar-backdrop" id="backdrop"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <button class="sidebar-toggle me-3" id="sidebarToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <span class="navbar-brand">PCD - Praktikum</span>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+      {% block content %}{% endblock %}
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/scripts.js"></script>
+  </body>
+</html>

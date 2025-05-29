@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% block title %}Array RGB{% endblock %} {% block
+content %}
+<h2 class="mb-4">Generate Histogram Citra</h2>
+<div class="card mb-5">
+  <div class="card-body">
+    <form action="/histogram/" method="post" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="uploadFile" class="form-label">Pilih Gambar:</label>
+        <input
+          type="file"
+          name="file"
+          class="form-control"
+          id="uploadFile"
+          accept="image/*"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Generate Histogram</button>
+    </form>
+  </div>
+</div>
+<div class="container mt-5 mb-5">
+  {% if grayscale_histogram_path and color_histogram_path %}
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <h4 class="text-center">Histogram Grayscale</h4>
+      <img
+        src="{{ grayscale_histogram_path }}"
+        alt="Grayscale Histogram"
+        class="img-fluid rounded shadow-lg mb-4"
+      />
+    </div>
+    <div class="col-md-6">
+      <h4 class="text-center">Histogram Berwarna</h4>
+      <img
+        src="{{ color_histogram_path }}"
+        alt="Color Histogram"
+        class="img-fluid rounded shadow-lg mb-4"
+      />
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

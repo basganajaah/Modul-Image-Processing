@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% block title %}Generate Pass Filter
+ Image{% endblock
+    %} {% block content %}
+    <div class="container mt-5 mb-5">
+      <h2 class="text-center">Low, High, Band Pass Filter Citra</h2>
+      <form
+        action="/passfilter/"
+        enctype="multipart/form-data"
+        method="post"
+        class="mt-4"
+      >
+        <div class="mb-3">
+          <input
+            name="file"
+            type="file"
+            accept="image/*"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="text-center">
+          <input
+            type="submit"
+            value="Generate Pass Filter"
+            class="btn btn-primary"
+          />
+        </div>
+      </form>
+    </div>
+    {% endblock %}
+    
