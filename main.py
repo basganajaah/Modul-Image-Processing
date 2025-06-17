@@ -8,6 +8,7 @@ from skimage.exposure import match_histograms
 from IPython.display import display, Image
 from io import BytesIO
 from PIL import Image as PILImage
+from typing import List
 
 import numpy as np
 import cv2
@@ -23,6 +24,9 @@ if not os.path.exists("static/uploads"):
 
 if not os.path.exists("static/histograms"):
     os.makedirs("static/histograms")
+
+if not os.path.exists("static/dataset"):
+    os.makedirs("static/dataset")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
@@ -206,7 +210,7 @@ async def specify_histogram(request: Request, file: UploadFile = File(...), ref_
     np_array = np.frombuffer(image_data, np.uint8)
     ref_np_array = np.frombuffer(ref_image_data, np.uint8)
 		
-		#jika ingin grayscale
+	#jika ingin grayscale
     #img = cv2.imdecode(np_array, cv2.IMREAD_GRAYSCALE)
     #ref_img = cv2.imdecode(ref_np_array, cv2.IMREAD_GRAYSCALE)
 
@@ -218,7 +222,7 @@ async def specify_histogram(request: Request, file: UploadFile = File(...), ref_
         return HTMLResponse("Gambar utama atau gambar referensi tidak dapat dibaca.", status_code=400)
 
     # Spesifikasi histogram menggunakan match_histograms dari skimage #grayscale
-    #specified_img = match_histograms(img, ref_img, multichannel=False)
+    # specified_img = match_histograms(img, ref_img, multichannel=False)
 	
     # Spesifikasi histogram menggunakan match_histograms dari skimage untuk gambar berwarna
     specified_img = match_histograms(img, ref_img, channel_axis=-1)
@@ -424,11 +428,11 @@ def apply_fourier_transform(image):
     return magnitude_spectrum
 
 @app.get("/periodicnoise/", response_class=HTMLResponse)
-async def passfilter_form(request: Request):
+async def periodic_form(request: Request):
     return templates.TemplateResponse("periodicnoise.html", {"request": request})
 
 @app.post("/periodicnoise/", response_class=HTMLResponse)
-async def show_passfilter(request: Request, file: UploadFile = File(...)):
+async def show_periodic(request: Request, file: UploadFile = File(...)):
     image_data = await file.read()
     np_array = np.frombuffer(image_data, np.uint8)
     img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
@@ -452,11 +456,10 @@ def reduce_periodic_noise(image):
     f = np.fft.fft2(gray)
     fshift = np.fft.fftshift(f)
 
-    # Create a mask to remove periodic noise
     rows, cols = gray.shape
     crow, ccol = rows // 2, cols // 2
     mask = np.ones((rows, cols), np.uint8)
-    r = 30  # Radius of the mask
+    r = 30
     mask[crow-r:crow+r, ccol-r:ccol+r] = 0
 
     fshift = fshift * mask
@@ -465,3 +468,243 @@ def reduce_periodic_noise(image):
     img_back = np.abs(img_back)
 
     return img_back
+
+@app.get("/facefilter/", response_class=HTMLResponse)
+async def facefilter_form(request: Request):
+    return templates.TemplateResponse("facefilter.html", {"request": request})
+
+@app.post("/facefilter/", response_class=HTMLResponse)
+async def facefilter_process(
+    request: Request,
+    files: List[UploadFile] = File(...),
+    new_person: str = Form(...),
+    filter_type: str = Form(...)
+):
+    if not new_person:
+        return templates.TemplateResponse("facefilter.html", {
+            "request": request,
+            "error": "Silakan masukkan nama orang baru."
+        })
+
+    save_path = os.path.join('static/dataset', new_person)
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+    elif len(os.listdir(save_path)) >= 20:
+        return templates.TemplateResponse("facefilter.html", {
+            "request": request,
+            "error": f"Nama {new_person} sudah ada di dataset dengan cukup gambar. Silakan pilih nama lain."
+        })
+
+    num_images = len(os.listdir(save_path))
+    max_images = 20
+    saved_images = []
+    last_img = None
+    last_faces = []
+
+    for file in files:
+        image_data = await file.read()
+        np_array = np.frombuffer(image_data, np.uint8)
+        img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+
+        if img is None:
+            continue
+
+        faces = detect_faces(img)
+        if len(faces) > 0:
+            last_img = img
+            last_faces = faces
+
+        for (x, y, w, h) in faces:
+            if num_images >= max_images:
+                break
+            face = img[y:y+h, x:x+w]
+            
+            if filter_type == "saltpepper":
+                processed_face = add_salt_and_pepper_noise(face, 0.02, 0.02)
+            elif filter_type == "noises":
+                processed_face = remove_noise(face, 5)
+            elif filter_type == "sharpenimg":
+                processed_face = sharpen_image(face)
+            else:
+                processed_face = face
+
+            img_name = os.path.join(save_path, f"img_{num_images}.jpg")
+            cv2.imwrite(img_name, processed_face)
+            saved_images.append(save_image(processed_face, f"face_{num_images}"))
+            num_images += 1
+
+    if len(saved_images) == 0:
+        return templates.TemplateResponse("facefilter.html", {
+            "request": request,
+            "error": "Tidak ada wajah yang terdeteksi dalam gambar yang diunggah."
+        })
+
+    if last_img is not None:
+        for (x, y, w, h) in last_faces:
+            cv2.rectangle(last_img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        original_path = save_image(last_img, "original")
+    else:
+        original_path = None
+
+    return templates.TemplateResponse("facefilter_result.html", {
+        "request": request,
+        "original_image_path": original_path,
+        "saved_image_paths": saved_images,
+        "num_saved": len(saved_images),
+        "person_name": new_person
+    })
+
+def detect_faces(image):
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    colors = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    faces = face_cascade.detectMultiScale(
+        colors, 
+        scaleFactor=1.1, 
+        minNeighbors=5, 
+        minSize=(30, 30)
+    )
+    return faces
+
+def add_salt_and_pepper_noise(image, salt_prob, pepper_prob):
+    noisy_image = np.copy(image)
+    total_pixels = image.shape[0] * image.shape[1]
+    
+    num_salt = int(total_pixels * salt_prob)
+    num_pepper = int(total_pixels * pepper_prob)
+    
+    coords = [
+        np.random.randint(0, i - 1, num_salt) for i in image.shape[:2]
+    ]
+    noisy_image[coords[0], coords[1]] = 255
+    
+    coords = [
+        np.random.randint(0, i - 1, num_pepper) for i in image.shape[:2]
+    ]
+    noisy_image[coords[0], coords[1]] = 0
+    
+    return noisy_image
+
+def remove_noise(image, kernel_size):
+    return cv2.medianBlur(image, kernel_size)
+
+def sharpen_image(image):
+    kernel = np.array([[0, -1, 0],
+                       [-1, 5, -1],
+                       [0, -1, 0]])
+    return cv2.filter2D(image, -1, kernel)
+
+@app.get("/chaincode/", response_class=HTMLResponse)
+async def chaincode_form(request: Request):
+    return templates.TemplateResponse("chaincode.html", {"request": request})
+
+@app.post("/chaincode/", response_class=HTMLResponse)
+async def chaincode_process(
+    request: Request,
+    file: UploadFile = File(...)
+):
+    image_data = await file.read()
+    np_array = np.frombuffer(image_data, np.uint8)
+    img = cv2.imdecode(np_array, cv2.IMREAD_GRAYSCALE)
+
+    if img is None:
+        return templates.TemplateResponse("chaincode.html", {
+            "request": request,
+            "error": "Gambar tidak valid atau tidak dapat dibaca."
+        })
+
+    threshold_value = 127
+    _, binary_img = cv2.threshold(img, threshold_value, 255, cv2.THRESH_BINARY_INV)
+
+    contours, _ = cv2.findContours(binary_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+    if not contours:
+        return templates.TemplateResponse("chaincode.html", {
+            "request": request,
+            "error": "Tidak ada kontur yang terdeteksi dalam gambar."
+        })
+
+    largest_contour = max(contours, key=cv2.contourArea)
+    chain_code = generate_freeman_chain_code(largest_contour)
+
+    img_display = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+    cv2.drawContours(img_display, [largest_contour], -1, (0, 255, 0), 1)
+
+    original_path = save_image(img, "original")
+    binary_path = save_image(binary_img, "binary")
+    contour_path = save_image(img_display, "contour")
+
+    return templates.TemplateResponse("chaincode_result.html", {
+        "request": request,
+        "original_image_path": original_path,
+        "binary_image_path": binary_path,
+        "contour_image_path": contour_path,
+        "chain_code": chain_code,
+        "chain_code_length": len(chain_code),
+        "num_contours": len(contours)
+    })
+
+def generate_freeman_chain_code(contour):
+    chain_code = []
+    if len(contour) < 2:
+        return chain_code
+
+    directions = {
+        (1, 0): 0, (1, 1): 1, (0, 1): 2, (-1, 1): 3,
+        (-1, 0): 4, (-1, -1): 5, (0, -1): 6, (1, -1): 7
+    }
+
+    for i in range(len(contour)):
+        p1 = contour[i][0]
+        p2 = contour[(i + 1) % len(contour)][0]
+        dx = p2[0] - p1[0]
+        dy = p2[1] - p1[1]
+        norm_dx = np.sign(dx)
+        norm_dy = np.sign(dy)
+        code = directions.get((norm_dx, norm_dy))
+        if code is not None:
+            chain_code.append(code)
+
+    return chain_code
+
+@app.get("/crackcode/", response_class=HTMLResponse)
+async def crackcode_form(request: Request):
+    return templates.TemplateResponse("crackcode.html", {"request": request})
+
+@app.post("/crackcode/", response_class=HTMLResponse)
+async def show_crackcode(
+    request: Request,
+    file: UploadFile = File(...)
+):
+    
+    image_data = await file.read()
+    np_array = np.frombuffer(image_data, np.uint8)
+    img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+
+    if img is None:
+        return templates.TemplateResponse("crackcode.html", {
+            "request": request,
+            "error": "Gambar tidak valid atau tidak dapat dibaca."
+        })
+    
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    ksize = 5
+    blurred = cv2.GaussianBlur(gray, (ksize, ksize), 0)
+
+    low_threshold = 50
+    high_threshold = 150
+    edges = cv2.Canny(blurred, low_threshold, high_threshold)
+    
+    original_path = save_image(cv2.cvtColor(img, cv2.COLOR_BGR2RGB), "original")
+    blurred_path = save_image(blurred, "blurred")
+    edges_path = save_image(edges, "edges")
+
+    return templates.TemplateResponse("crackcode_result.html", {
+        "request": request,
+        "original_image_path": original_path,
+        "blurred_image_path": blurred_path,
+        "edges_image_path": edges_path,
+        "low_threshold": low_threshold,
+        "high_threshold": high_threshold,
+        "ksize": ksize
+    })

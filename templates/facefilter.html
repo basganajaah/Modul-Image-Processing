@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Face Detection Dataset and Filter{% endblock %}
+{% block content %}
+<h2>Face Detection Dataset and Filter</h2>
+<p class="mb-4">Diupdate dari Streamlit Code menjadi JinjaTemplate</p>
+<div class="card mb-5">
+  <div class="card-body">
+    {% if error %}
+    <div class="alert alert-danger" role="alert">{{ error }}</div>
+    {% endif %}
+    <form id="facefilter-form" action="/facefilter/" method="post" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="newPerson" class="form-label">Nama Dataset</label>
+        <input
+          type="text"
+          name="new_person"
+          class="form-control"
+          id="newPerson"
+          placeholder="Masukkan nama dataset..."
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <div class="text-center mb-3">
+          <video id="video" width="320" height="240" autoplay class="rounded shadow mb-2"></video>
+          <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+        </div>
+        <input
+          type="file"
+          name="files"
+          id="captured-image"
+          accept="image/*"
+          multiple
+          style="display:none;"
+          required
+        />
+        <button type="button" class="btn btn-secondary mb-3" id="camera-btn">Take Photo</button>
+        <div class="progress mb-3">
+          <div
+            id="capture-progress"
+            class="progress-bar bg-primary"
+            role="progressbar"
+            style="width:0%;"
+            aria-valuenow="0"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+        </div>
+        <p id="progress-text" class="text-center text-muted">Mengambil 0 dari 20 gambar</p>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Pilih Filter:</label>
+        <select name="filter_type" class="form-select" required>
+          <option value="saltpepper">Salt and Pepper</option>
+          <option value="noises">Remove Noise</option>
+          <option value="sharpenimg">Sharpen Image</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Process Face Detection</button>
+    </form>
+  </div>
+</div>
+<script>
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const cameraBtn = document.getElementById('camera-btn');
+  const submitBtn = document.getElementById('submit-btn');
+  const capturedImageInput = document.getElementById('captured-image');
+  const progressBar = document.getElementById('capture-progress');
+  const progressText = document.getElementById('progress-text');
+
+  const totalImages = 20;
+  let capturedCount = 0;
+  let capturedFiles = [];
+
+  async function startWebcam() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      startCapture();
+    } catch (err) {
+      alert('Gagal mengakses webcam: ' + err.message);
+      submitBtn.disabled = true;
+      cameraBtn.disabled = false;
+    }
+  }
+
+  // Capture images automatically
+  function startCapture() {
+    cameraBtn.disabled = true;
+    const context = canvas.getContext('2d');
+    const interval = setInterval(() => {
+      if (capturedCount >= totalImages) {
+        clearInterval(interval);
+        // Set all captured files to input
+        const dataTransfer = new DataTransfer();
+        capturedFiles.forEach(f => dataTransfer.items.add(f));
+        capturedImageInput.files = dataTransfer.files;
+        submitBtn.disabled = false;
+        cameraBtn.disabled = false; // Re-enable for another capture
+        return;
+      }
+
+      // Capture frame
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => {
+        const file = new File([blob], `captured_image_${capturedCount}.jpg`, { type: 'image/jpeg' });
+        capturedFiles.push(file);
+        capturedCount++;
+
+        // Update progress bar and text
+        const progressPercent = (capturedCount / totalImages) * 100;
+        progressBar.style.width = `${progressPercent}%`;
+        progressBar.setAttribute('aria-valuenow', progressPercent);
+        progressText.textContent = `Mengambil ${capturedCount} dari ${totalImages} gambar`;
+      }, 'image/jpeg', 0.9);
+    }, 500); // Capture every 500ms
+  }
+
+  // Start webcam when page loads
+  cameraBtn.addEventListener('click', startWebcam);
+
+  // Stop webcam when form is submitted
+  document.getElementById('facefilter-form').addEventListener('submit', () => {
+    const stream = video.srcObject;
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %} {% block title %}Hasil Chain Code Citra{% endblock %}
+{% block content %}
+<div class="container mt-5 mb-5">
+  <h2 class="text-center">Hasil Pemrosesan Chain Code Citra</h2>
+  <p class="text-center text-muted">
+    Jumlah Kontur Ditemukan: {{ num_contours }} | Panjang Chain Code: {{
+    chain_code_length }}
+  </p>
+
+  <div class="row">
+    <div class="col-md-4">
+      <h4 class="text-center">Gambar Asli</h4>
+      <div class="text-center">
+        <img
+          src="{{ original_image_path }}"
+          alt="Original Image"
+          class="img-fluid rounded shadow-lg mb-4"
+        />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h4 class="text-center">Gambar Biner</h4>
+      <div class="text-center">
+        <img
+          src="{{ binary_image_path }}"
+          alt="Binary Image"
+          class="img-fluid rounded shadow-lg mb-4"
+        />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h4 class="text-center">Kontur Terdeteksi</h4>
+      <div class="text-center">
+        <img
+          src="{{ contour_image_path }}"
+          alt="Contour Image"
+          class="img-fluid rounded shadow-lg mb-4"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <h4 class="text-center">Kode Rantai Freeman</h4>
+    {% if chain_code %}
+    <div class="card">
+      <div class="card-body">
+        <pre class="mb-0" style="max-height: 200px; overflow-y: auto">
+{{ chain_code }}</pre
+        >
+      </div>
+    </div>
+    {% else %}
+    <p class="text-center text-danger">
+      Tidak ada kode rantai yang dihasilkan.
+    </p>
+    {% endif %}
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="/" class="btn btn-secondary">Kembali ke Home</a>
+  </div>
+</div>
+{% endblock %}

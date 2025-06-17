@@ -1,0 +1,47 @@
+{% extends "base.html" %} {% block title %}Hasil Crack Code Citra{% endblock %}
+{% block content %}
+<div class="container mt-5 mb-5">
+  <h2 class="text-center">Hasil Pemrosesan Crack Code Citra</h2>
+  <p class="text-center text-muted">
+    Parameter: Kernel Size = {{ ksize }} | Threshold Rendah = {{ low_threshold
+    }} | Threshold Tinggi = {{ high_threshold }}
+  </p>
+
+  <div class="row">
+    <div class="col-md-4">
+      <h4 class="text-center">Gambar Asli</h4>
+      <div class="text-center">
+        <img
+          src="{{ original_image_path }}"
+          alt="Original Image"
+          class="img-fluid rounded shadow-lg mb-4"
+        />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h4 class="text-center">Grayscale + Gaussian Blur</h4>
+      <div class="text-center">
+        <img
+          src="{{ blurred_image_path }}"
+          alt="Blurred Image"
+          class="img-fluid rounded shadow-lg mb-4"
+        />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h4 class="text-center">Tepi Canny</h4>
+      <div class="text-center">
+        <img
+          src="{{ edges_image_path }}"
+          alt="Edges Image"
+          class="img-fluid rounded shadow-lg mb-4"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="/" class="btn btn-secondary">Kembali ke Home</a>
+  </div>
+</div>
+{% endblock %}

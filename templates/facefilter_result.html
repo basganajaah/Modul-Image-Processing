@@ -1,0 +1,30 @@
+{% extends "base.html" %} {% block title %}Hasil Penambahan Wajah{% endblock %}
+{% block content %}
+<div class="container mt-5 mb-5">
+  <h2 class="text-center">Hasil Penambahan Wajah untuk {{ person_name }}</h2>
+  <p class="text-center text-muted">
+    {{ num_saved }} wajah telah ditambahkan ke dataset.
+  </p>
+
+  <div class="row">
+    <div class="col">
+      <h4 class="text-center">Wajah yang Disimpan</h4>
+      <div class="text-center">
+        {% if num_saved > 0 %} {% for path in saved_image_paths %}
+        <img
+          src="{{ path }}"
+          alt="Saved Face Image"
+          class="img-fluid rounded shadow-lg mb-4"
+          style="max-width: 200px; display: inline-block"
+        />
+        {% endfor %} {% else %}
+        <p class="text-danger">Tidak ada wajah yang berhasil disimpan.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="text-center mt-4">
+    <a href="/" class="btn btn-secondary">Kembali ke Home</a>
+  </div>
+</div>
+{% endblock %}
