@@ -1,29 +1,24 @@
 {% extends "base.html" %} {% block title %}Generate Fourier Transform Image{%
 endblock %} {% block content %}
-<div class="container mt-5 mb-5">
-  <h2 class="text-center">Fourier Transform Citra</h2>
-  <form
-    action="/fouriertransform/"
-    enctype="multipart/form-data"
-    method="post"
-    class="mt-4"
-  >
-    <div class="mb-3">
-      <input
-        name="file"
-        type="file"
-        accept="image/*"
-        class="form-control"
-        required
-      />
-    </div>
-    <div class="text-center">
-      <input
-        type="submit"
-        value="Generate Fourier Transform"
-        class="btn btn-primary"
-      />
-    </div>
-  </form>
+<h2 class="mb-4">Fourier Transform Citra</h2>
+<div class="card mb-5">
+  <div class="card-body">
+    <form action="/fouriertransform/" method="post" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="uploadFile" class="form-label">Pilih Gambar:</label>
+        <input
+          type="file"
+          name="file"
+          class="form-control"
+          id="uploadFile"
+          accept="image/*"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">
+        Generate Fourier Transform
+      </button>
+    </form>
+  </div>
 </div>
 {% endblock %}

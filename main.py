@@ -126,7 +126,6 @@ async def perform_logic_operation(
     })
 @app.get("/grayscale/", response_class=HTMLResponse)
 async def grayscale_form(request: Request):
-    # Menampilkan form untuk upload gambar ke grayscale
     return templates.TemplateResponse("grayscale.html", {"request": request})
 
 @app.post("/grayscale/", response_class=HTMLResponse)
@@ -148,7 +147,6 @@ async def convert_grayscale(request: Request, file: UploadFile = File(...)):
 
 @app.get("/histogram/", response_class=HTMLResponse)
 async def histogram_form(request: Request):
-    # Menampilkan halaman untuk upload gambar untuk histogram
     return templates.TemplateResponse("histogram.html", {"request": request})
 
 @app.post("/histogram/", response_class=HTMLResponse)
@@ -197,7 +195,6 @@ async def equalize_histogram(request: Request, file: UploadFile = File(...)):
 
 @app.get("/specify/", response_class=HTMLResponse)
 async def specify_form(request: Request):
-    # Menampilkan halaman untuk upload gambar dan referensi untuk spesifikasi histogram
     return templates.TemplateResponse("specify.html", {"request": request})
 
 @app.post("/specify/", response_class=HTMLResponse)
@@ -239,7 +236,6 @@ async def specify_histogram(request: Request, file: UploadFile = File(...), ref_
 
 @app.get("/statistics/", response_class=HTMLResponse)
 async def statistics_form(request: Request):
-    # Menampilkan halaman untuk upload gambar dan referensi untuk convolution
     return templates.TemplateResponse("statistics.html", {"request": request})
 
 @app.post("/statistics/", response_class=HTMLResponse)
@@ -286,11 +282,10 @@ def save_color_histogram(image):
 
 @app.get("/convolution/", response_class=HTMLResponse)
 async def convolution_form(request: Request):
-    # Menampilkan halaman untuk upload gambar dan referensi untuk convolution
     return templates.TemplateResponse("convolution.html", {"request": request})
 
 @app.post("/convolution/", response_class=HTMLResponse)
-async def show_convolution(request: Request, file: UploadFile = File(...), kernel_type: str = "average"):
+async def show_convolution(request: Request, file: UploadFile = File(...), kernel_type: str = Form(...)):
     image_data = await file.read()
     np_array = np.frombuffer(image_data, np.uint8)
     img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
@@ -298,7 +293,12 @@ async def show_convolution(request: Request, file: UploadFile = File(...), kerne
     if img is None:
         return templates.TemplateResponse("error.html", {"request": request, "message": "Gagal membaca gambar."})
 
-    modified_img = apply_convolution(img, kernel_type)
+    if kernel_type == "average":
+        modified_img = apply_convolution(img, kernel_type)
+    elif kernel_type == "sharpen":
+        modified_img = apply_convolution(img, kernel_type)
+    elif kernel_type == "edge":
+        modified_img = apply_convolution(img, kernel_type)
 
     original_path = save_image(img, "original")
     modified_path = save_image(modified_img, "modified")
@@ -309,12 +309,12 @@ async def show_convolution(request: Request, file: UploadFile = File(...), kerne
         "modified_image_path": modified_path
     })
 
-def apply_convolution(image, kernel_type="average"):
-    if kernel_type == "average":
+def apply_convolution(image, value):
+    if value == "average":
         kernel = np.ones((3, 3), np.float32) / 9
-    elif kernel_type == "sharpen":
+    elif value == "sharpen":
         kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
-    elif kernel_type == "edge":
+    elif value == "edge":
         kernel = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]])
     else:
         raise ValueError("Jenis kernel tidak valid.")
@@ -324,11 +324,10 @@ def apply_convolution(image, kernel_type="average"):
 
 @app.get("/zeropadding/", response_class=HTMLResponse)
 async def zero_padding_form(request: Request):
-    # Menampilkan halaman untuk upload gambar dan referensi untuk zero padding
     return templates.TemplateResponse("zeropadding.html", {"request": request})
 
 @app.post("/zeropadding/", response_class=HTMLResponse)
-async def show_zero_padding(request: Request, file: UploadFile = File(...), padding_size: int = 20):
+async def show_zero_padding(request: Request, file: UploadFile = File(...), value: int = Form(...)):
     image_data = await file.read()
     np_array = np.frombuffer(image_data, np.uint8)
     img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
@@ -336,7 +335,7 @@ async def show_zero_padding(request: Request, file: UploadFile = File(...), padd
     if img is None:
         return templates.TemplateResponse("error.html", {"request": request, "message": "Gagal membaca gambar."})
 
-    modified_img = apply_zero_padding(img, padding_size)
+    modified_img = apply_zero_padding(img, value)
 
     original_path = save_image(img, "original")
     modified_path = save_image(modified_img, "modified")
@@ -347,17 +346,16 @@ async def show_zero_padding(request: Request, file: UploadFile = File(...), padd
         "modified_image_path": modified_path
     })
 
-def apply_zero_padding(image, padding_size=20):
+def apply_zero_padding(image, padding_size):
     padded_img = cv2.copyMakeBorder(image, padding_size, padding_size, padding_size, padding_size, cv2.BORDER_CONSTANT, value=[0, 0, 0])
     return padded_img
 
 @app.get("/passfilter/", response_class=HTMLResponse)
 async def passfilter_form(request: Request):
-    # Menampilkan halaman untuk upload gambar dan referensi untuk zero padding
     return templates.TemplateResponse("passfilter.html", {"request": request})
 
 @app.post("/passfilter/", response_class=HTMLResponse)
-async def show_passfilter(request: Request, file: UploadFile = File(...), filter_type: str = "low"):
+async def show_passfilter(request: Request, file: UploadFile = File(...), filter_type: str = Form(...)):
     image_data = await file.read()
     np_array = np.frombuffer(image_data, np.uint8)
     img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
@@ -365,7 +363,12 @@ async def show_passfilter(request: Request, file: UploadFile = File(...), filter
     if img is None:
         return templates.TemplateResponse("error.html", {"request": request, "message": "Gagal membaca gambar."})
 
-    modified_img = apply_filter(img, filter_type)
+    if filter_type == "low":
+        modified_img = apply_filter(img, filter_type)
+    elif filter_type == "high":
+        modified_img = apply_filter(img, filter_type)
+    elif filter_type == "band":
+        modified_img = apply_filter(img, filter_type)
 
     original_path = save_image(img, "original")
     modified_path = save_image(modified_img, "modified")
@@ -376,13 +379,13 @@ async def show_passfilter(request: Request, file: UploadFile = File(...), filter
         "modified_image_path": modified_path
     })
 
-def apply_filter(image, filter_type="low"):
-    if filter_type == "low":
+def apply_filter(image, value):
+    if value == "low":
         filtered_img = cv2.GaussianBlur(image, (5, 5), 0)
-    elif filter_type == "high":
+    elif value == "high":
         kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
         filtered_img = cv2.filter2D(image, -1, kernel)
-    elif filter_type == "band":
+    elif value == "band":
         low_pass = cv2.GaussianBlur(image, (9, 9), 0)
         high_pass = image - low_pass
         filtered_img = low_pass + high_pass
@@ -391,7 +394,6 @@ def apply_filter(image, filter_type="low"):
 
 @app.get("/fouriertransform/", response_class=HTMLResponse)
 async def fourier_form(request: Request):
-    # Menampilkan halaman untuk upload gambar dan referensi untuk zero padding
     return templates.TemplateResponse("fouriertransform.html", {"request": request})
 
 @app.post("/fouriertransform/", response_class=HTMLResponse)
@@ -423,7 +425,6 @@ def apply_fourier_transform(image):
 
 @app.get("/periodicnoise/", response_class=HTMLResponse)
 async def passfilter_form(request: Request):
-    # Menampilkan halaman untuk upload gambar dan referensi untuk zero padding
     return templates.TemplateResponse("periodicnoise.html", {"request": request})
 
 @app.post("/periodicnoise/", response_class=HTMLResponse)

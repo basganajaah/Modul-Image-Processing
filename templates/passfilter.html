@@ -1,31 +1,32 @@
-{% extends "base.html" %} {% block title %}Generate Pass Filter
- Image{% endblock
-    %} {% block content %}
-    <div class="container mt-5 mb-5">
-      <h2 class="text-center">Low, High, Band Pass Filter Citra</h2>
-      <form
-        action="/passfilter/"
-        enctype="multipart/form-data"
-        method="post"
-        class="mt-4"
-      >
-        <div class="mb-3">
-          <input
-            name="file"
-            type="file"
-            accept="image/*"
-            class="form-control"
-            required
-          />
-        </div>
-        <div class="text-center">
-          <input
-            type="submit"
-            value="Generate Pass Filter"
-            class="btn btn-primary"
-          />
-        </div>
-      </form>
-    </div>
-    {% endblock %}
-    
+{% extends "base.html" %} {% block title %}Generate Pass Filter Image{% endblock
+%} {% block content %}
+<h2 class="mb-4">Low, High, Band Pass Filter Citra</h2>
+<div class="card mb-5">
+  <div class="card-body">
+    <form action="/passfilter/" method="post" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="uploadFile" class="form-label">Pilih Gambar:</label>
+        <input
+          type="file"
+          name="file"
+          class="form-control"
+          id="uploadFile"
+          accept="image/*"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Pilih Filter:</label>
+        <select name="filter_type" class="form-select" required>
+          <option value="low">Low Pass</option>
+          <option value="high">High Pass</option>
+          <option value="band">Band Pass</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">
+        Generate Pass Filter
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

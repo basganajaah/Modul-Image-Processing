@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}JTK PCD 2024 -
-      BANDYAGA ADIANSYAH SUGANDI - 231511037{% endblock %}
+    <title>
+      {% block title %}JTK PCD 2024 - BANDYAGA ADIANSYAH SUGANDI - 231511037{%
+      endblock %}
     </title>
     <link rel="icon" type="image/png" href="/static/image/logo.png" />
     <link
@@ -19,11 +20,15 @@
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
     <link rel="stylesheet" href="/static/css/style.css" />
   </head>
   <body>
     <!-- Sidebar -->
-    <nav class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div class="logo">
           <i><img src="/static/image/logo.png" alt="Icon" /></i>
@@ -56,74 +61,115 @@
           </a>
         </li>
 
-        <!-- Modul 1: RGB -->
+        <!-- Modul 1 -->
         <li class="nav-section">
           <div class="nav-section-title">
-            <i class="fas fa-paint-roller"></i>
+            <i class="fas fa-pen-fancy"></i>
             Modul 1
           </div>
           <ul class="nav-subsection">
             <li class="nav-item">
               <a href="/rgb" class="nav-link">
-                <i class="fas fa-layer-group"></i>
+                <i class="fas fa-chevron-right"></i>
                 Array RGB
               </a>
             </li>
           </ul>
         </li>
 
-        <!-- Modul 2: Operasi Dasar Aritmatika -->
+        <!-- Modul 2 -->
         <li class="nav-section">
           <div class="nav-section-title">
-            <i class="fas fa-users"></i>
+            <i class="fas fa-pen-fancy"></i>
             Modul 2
           </div>
           <ul class="nav-subsection">
             <li class="nav-item">
               <a href="/operation/" class="nav-link">
-                <i class="fas fa-user"></i>
+                <i class="fas fa-chevron-right"></i>
                 Operasi Aritmatika dan Logika Citra
               </a>
             </li>
             <li class="nav-item">
               <a href="/statistics/" class="nav-link">
-                <i class="fas fa-user-tag"></i>
+                <i class="fas fa-chevron-right"></i>
                 Statistik Citra
               </a>
             </li>
             <li class="nav-item">
               <a href="/grayscale/" class="nav-link">
-                <i class="fas fa-user-tag"></i>
+                <i class="fas fa-chevron-right"></i>
                 Konversi Grayscale
               </a>
             </li>
             <li class="nav-item">
               <a href="/histogram/" class="nav-link">
-                <i class="fas fa-user-tag"></i>
+                <i class="fas fa-chevron-right"></i>
                 Lihat Histogram Citra
               </a>
             </li>
             <li class="nav-item">
               <a href="/equalize/" class="nav-link">
-                <i class="fas fa-user-tag"></i>
+                <i class="fas fa-chevron-right"></i>
                 Histogram Equalization
               </a>
             </li>
             <li class="nav-item">
               <a href="/specify/" class="nav-link">
-                <i class="fas fa-user-tag"></i>
+                <i class="fas fa-chevron-right"></i>
                 Histogram Specification
               </a>
             </li>
           </ul>
         </li>
 
+        <!-- Modul 3 -->
+        <li class="nav-section">
+          <div class="nav-section-title">
+            <i class="fas fa-pen-fancy"></i>
+            Modul 3
+          </div>
+          <ul class="nav-subsection">
+            <li class="nav-item">
+              <a href="/convolution/" class="nav-link">
+                <i class="fas fa-chevron-right"></i>
+                Konvolusi
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/zeropadding/" class="nav-link">
+                <i class="fas fa-chevron-right"></i>
+                Zero Padding
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/passfilter/" class="nav-link">
+                <i class="fas fa-chevron-right"></i>
+                Low, High, Band Pass Filter
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/fouriertransform/" class="nav-link">
+                <i class="fas fa-chevron-right"></i>
+                Fourier Transform
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/periodicnoise/" class="nav-link">
+                <i class="fas fa-chevron-right"></i>
+                Reduce Periodic Noise
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
       <!-- No Results Message -->
       <div class="no-results" id="noResults" style="display: none">
         <i class="fas fa-search"></i>
         <p>Menu yang dicari tidak ada</p>
       </div>
-    </nav>
+    </aside>
 
     <!-- Backdrop -->
     <div class="sidebar-backdrop" id="backdrop"></div>
