@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block title %}Hitogram Equalization{% endblock %} {% block content
 %}
-<h2 class="mb-4">Equalisasi Histogram Citra</h2>
+<h2 class="mb-4">Histogram Equalization</h2>
 <div class="card mb-5">
   <div class="card-body">
     <form action="/equalize/" method="post" enctype="multipart/form-data">
@@ -15,7 +15,7 @@
           required
         />
       </div>
-      <button type="submit" class="btn btn-primary">Equalisasi Histogram</button>
+      <button type="submit" class="btn btn-primary">Equalize</button>
     </form>
   </div>
 </div>

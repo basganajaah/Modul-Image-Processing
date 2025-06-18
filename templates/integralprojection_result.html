@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block title %}Hasil Proyeksi Integral{% endblock %}
+{% block content %}
+<div class="container mt-5 mb-5">
+  <h2 class="text-center">Hasil Analisis Proyeksi Integral</h2>
+  <p class="text-center text-muted">
+    Dimensi Gambar: {{ image_width }} x {{ image_height }} piksel
+  </p>
+
+  <div class="row">
+    <div class="col-md-4">
+      <h4 class="text-center">Citra Biner</h4>
+      <div class="text-center">
+        <img
+          src="{{ binary_image_path }}"
+          alt="Binary Image"
+          class="img-fluid rounded shadow-lg mb-4"
+        />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h4 class="text-center">Proyeksi Horizontal</h4>
+      <div class="text-center">
+        <img
+          src="{{ hproj_image_path }}"
+          alt="Horizontal Projection"
+          class="img-fluid rounded shadow-lg mb-4"
+        />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h4 class="text-center">Proyeksi Vertikal</h4>
+      <div class="text-center">
+        <img
+          src="{{ vproj_image_path }}"
+          alt="Vertical Projection"
+          class="img-fluid rounded shadow-lg mb-4"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="/" class="btn btn-secondary">Kembali ke Home</a>
+  </div>
+</div>
+{% endblock %}

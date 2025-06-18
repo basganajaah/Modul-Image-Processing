@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from skimage.exposure import match_histograms
 from IPython.display import display, Image
-from io import BytesIO
+import io
 from PIL import Image as PILImage
 from typing import List
 
@@ -695,7 +695,7 @@ async def show_crackcode(
     high_threshold = 150
     edges = cv2.Canny(blurred, low_threshold, high_threshold)
     
-    original_path = save_image(cv2.cvtColor(img, cv2.COLOR_BGR2RGB), "original")
+    original_path = save_image(img, "original")
     blurred_path = save_image(blurred, "blurred")
     edges_path = save_image(edges, "edges")
 
@@ -708,3 +708,66 @@ async def show_crackcode(
         "high_threshold": high_threshold,
         "ksize": ksize
     })
+
+@app.get("/integralprojection/", response_class=HTMLResponse)
+async def integralprojection_form(request: Request):
+    return templates.TemplateResponse("integralprojection.html", {"request": request})
+
+@app.post("/integralprojection/", response_class=HTMLResponse)
+async def integralprojection_process(request: Request, file: UploadFile = File(...)):
+    image_data = await file.read()
+    np_array = np.frombuffer(image_data, np.uint8)
+    img = cv2.imdecode(np_array, cv2.IMREAD_GRAYSCALE)
+    
+    if img is None:
+        return templates.TemplateResponse("integralprojection.html", {
+            "request": request,
+            "error": "Gambar tidak valid atau tidak dapat dibaca."
+        })
+
+    _, binary_img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    binary_norm = binary_img / 255.0
+
+    height, width = binary_norm.shape
+
+    horizontal_projection = np.sum(binary_norm, axis=0)
+    vertical_projection = np.sum(binary_norm, axis=1)
+
+    binary_path = save_image(binary_img, "binary")
+
+    hproj_path = save_plot(horizontal_projection, np.arange(width), horizontal_projection, 
+                           "Proyeksi Horizontal (Profil Vertikal)", "Indeks Kolom", "Jumlah Piksel")
+    vproj_path = save_plot(vertical_projection, vertical_projection, np.arange(height), 
+                           "Proyeksi Vertikal", "Indeks Kolom", "Jumlah Piksel", invert_y=True)
+    
+    return templates.TemplateResponse("integralprojection_result.html", {
+        "request": request,
+        "binary_image_path": binary_path,
+        "hproj_image_path": hproj_path,
+        "vproj_image_path": vproj_path,
+        "image_height": height,
+        "image_width": width
+    })
+
+def save_plot(data, x, y, title, xlabel, ylabel, invert_y=False):
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.plot(x, y)
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    if invert_y:
+        ax.invert_yaxis()
+    plt.tight_layout()
+    
+    # Save plot to bytes buffer
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    plt.close(fig)
+    buf.seek(0)
+    
+    # Convert to image and save
+    img = PILImage.open(buf)
+    filename = f"plot_{uuid4()}.png"
+    path = os.path.join("static/uploads", filename)
+    img.save(path)
+    return f"/static/uploads/{filename}"
