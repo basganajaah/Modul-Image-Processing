@@ -1,0 +1,76 @@
+{% extends "base.html" %} {% block title %}Hasil Analisis Tekstur{% endblock %}
+{% block content %}
+<div class="container mt-5 mb-5">
+  <h2 class="text-center">Hasil Analisis Tekstur</h2>
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Citra Asli dan Grayscale</h4>
+      <img
+        src="{{ comp_comparison_path }}"
+        alt="Texture Comparison"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Peta Fitur Statistik</h4>
+      <img
+        src="{{ stat_path }}"
+        alt="Statistical Maps"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Matriks GLCM</h4>
+      <img
+        src="{{ glcm_path }}"
+        alt="GLCM Matrix"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Peta dan Histogram LBP</h4>
+      <img
+        src="{{ lbp_path }}"
+        alt="LBP"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Respons Filter Gabor</h4>
+      <img
+        src="{{ gabor_path }}"
+        alt="Gabor Filters"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Peta Energi Tekstur Law</h4>
+      <img
+        src="{{ law_path }}"
+        alt="Law's Texture Energy"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="/" class="btn btn-secondary">Kembali ke Home</a>
+  </div>
+</div>
+{% endblock %}

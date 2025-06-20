@@ -1,0 +1,69 @@
+{% extends "base.html" %} {% block title %}Hasil Kompresi Lossless (PNG){%
+endblock %} {% block content %}
+<div class="container mt-5 mb-5">
+  <h2 class="text-center">Hasil Analisis Kompresi Lossless</h2>
+  <p class="text-center text-muted">Ukuran File Asli: {{ original_size }} KB</p>
+
+  <!-- Comparison Images -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-6">
+      <h4 class="text-center">Original vs Compressed (Level 9)</h4>
+      <img
+        src="{{ comp_comparison_path }}"
+        alt="Comparison"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+        style="max-height: 400px; width: auto"
+      />
+    </div>
+  </div>
+
+  <!-- Table of Results -->
+  <div class="mb-4">
+    <h4 class="text-center">Tabel Hasil Kompresi</h4>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead class="table-dark">
+          <tr>
+            {% for header in headers %}
+            <th scope="col">{{ header }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in results %}
+          <tr>
+            {% for cell in row %}
+            <td>{{ cell }}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Graphs -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <h4 class="text-center">Level Kompresi vs Ukuran, PSNR, SSIM</h4>
+      <img
+        src="{{ graph_psnr_ssim_path }}"
+        alt="Graph PSNR SSIM"
+        class="img-fluid rounded shadow-lg"
+      />
+    </div>
+    <div class="col-md-6">
+      <h4 class="text-center">Perbandingan Ukuran File</h4>
+      <img
+        src="{{ bar_file_size_path }}"
+        alt="Bar File Size"
+        class="img-fluid rounded shadow-lg"
+      />
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="/" class="btn btn-secondary">Kembali ke Home</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends "base.html" %} {% block title %}Hasil Analisis Ruang Warna{% endblock
+%} {% block content %}
+<div class="container mt-5 mb-5">
+  <h2 class="text-center">Hasil Analisis Ruang Warna</h2>
+
+  <!-- Original Image -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Citra RGB Asli</h4>
+      <img
+        src="{{ original_path }}"
+        alt="Original RGB"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <!-- RGB Channels -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Kanal RGB</h4>
+      <img
+        src="{{ rgb_channels_path }}"
+        alt="RGB Channels"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <!-- XYZ Color Space -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Ruang Warna XYZ</h4>
+      <img
+        src="{{ xyz_path }}"
+        alt="XYZ Image"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Komponen XYZ</h4>
+      <img
+        src="{{ xyz_channels_path }}"
+        alt="XYZ Channels"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <!-- Lab Color Space -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Ruang Warna Lab</h4>
+      <img
+        src="{{ lab_path }}"
+        alt="Lab Image"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Komponen Lab</h4>
+      <img
+        src="{{ lab_channels_path }}"
+        alt="Lab Channels"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <!-- YCbCr Color Space -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Ruang Warna YCbCr</h4>
+      <img
+        src="{{ ycbcr_path }}"
+        alt="YCbCr Image"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Komponen YCbCr</h4>
+      <img
+        src="{{ ycbcr_channels_path }}"
+        alt="YCbCr Channels"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <!-- HSV Color Space -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Ruang Warna HSV</h4>
+      <img
+        src="{{ hsv_path }}"
+        alt="HSV Image"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Komponen HSV</h4>
+      <img
+        src="{{ hsv_channels_path }}"
+        alt="HSV Channels"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <!-- YIQ Color Space -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Ruang Warna YIQ</h4>
+      <img
+        src="{{ yiq_path }}"
+        alt="YIQ Image"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Komponen YIQ</h4>
+      <img
+        src="{{ yiq_channels_path }}"
+        alt="YIQ Channels"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <!-- Luminance Comparison -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <h4 class="text-center">Perbandingan Komponen Luminansi</h4>
+      <img
+        src="{{ luminance_path }}"
+        alt="Luminance Comparison"
+        class="img-fluid rounded shadow-lg mx-auto d-block"
+      />
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="/color/" class="btn btn-secondary">Kembali ke Form</a>
+  </div>
+</div>
+{% endblock %}

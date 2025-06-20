@@ -1,12 +1,12 @@
-{% extends "base.html" %} {% block title %}Generate Integral Projection Citra{%
+{% extends "base.html" %} {% block title %}Analisis Kompresi Lossless (PNG){%
 endblock %} {% block content %}
-<h2 class="mb-4">Integral Projection</h2>
+<h2 class="mb-4">Analisis Kompresi Lossless</h2>
 <div class="card mb-5">
   <div class="card-body">
     {% if error %}
     <div class="alert alert-danger" role="alert">{{ error }}</div>
     {% endif %}
-    <form action="/integralprojection/" method="post" enctype="multipart/form-data">
+    <form action="/lossless/" method="post" enctype="multipart/form-data">
       <div class="mb-3">
         <label for="uploadFile" class="form-label">Pilih Gambar:</label>
         <input
@@ -19,7 +19,7 @@ endblock %} {% block content %}
         />
       </div>
       <button type="submit" class="btn btn-primary">
-        Generate Integral Projection
+        Analisis Kompresi Lossless
       </button>
     </form>
   </div>
